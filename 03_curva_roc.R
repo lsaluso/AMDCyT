@@ -1,5 +1,5 @@
 
-setwd(paste0(p_ruta,'exp/lightGBM/'))
+setwd(paste0(p_ruta,'exp/lightGBM/',kprefijo,'/'))
 
 tb_entrega %>% 
   arrange(desc(pred)) %>% 
