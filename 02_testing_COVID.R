@@ -31,6 +31,9 @@ dsLearn <- as.data.table(dsLearn)
 #paso la clase a binaria que tome valores {0,1}  enteros
 dsLearn[ , clase01 := ifelse( resultado=="muerte", 1L, 0L) ]
 
+# Hacemos el FE
+dsLearn = FE(dsLearn)
+
 set.seed(ksemilla_azar)
 trainIndex <- createDataPartition(dsLearn$clase01, p = 0.8,
                                   list = F,times = 1)
