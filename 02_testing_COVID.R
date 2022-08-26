@@ -1,11 +1,13 @@
 
+# Librerías para Testing
+require("data.table")
+require("lightgbm")
+library(caret)
 
-
-#hiperparametros de LightGBM
-# si es de IT y le gusta automatizar todo, no proteste, ya llegara con MLOps
+file_log(reg="Comenzamos el TESTING.")
 
 # Leemos la salida de la Bayesiana
-BO = read.csv(paste0(p_ruta, 'exp/lightGBM/', p_etiqueta_archivos_salida, '.txt'), sep="\t")
+BO = read.csv(paste0( p_etiqueta_archivos_salida, '.txt'), sep="\t")
 BO = BO[order(-BO$parametro),]
 
 kmax_bin           <-   BO[1,"max_bin"]
@@ -18,18 +20,16 @@ kfeature_fraction  <-   BO[1, "feature_fraction"]
 rm(list=c('BO'))
 
 
-kexperimento   <- paste0( kprefijo, "" )
-
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
 #cargo el dataset donde voy a entrenar
-setwd(p_carpeta_base)
-dsLearn <- readRDS(p_archivo_dataset)
+file_log(reg="Comienzo de Testing.")
+
+dsLearn <- readRDS(paste0(p_ruta,p_carpeta_base,p_archivo_dataset))
 dsLearn <- as.data.table(dsLearn)
-#paso la clase a binaria que tome valores {0,1}  enteros
-dsLearn[ , clase01 := ifelse( resultado=="muerte", 1L, 0L) ]
+
 
 # Hacemos el FE
 dsLearn = FE(dsLearn)
@@ -43,20 +43,8 @@ dtest <- dsLearn[-trainIndex,]
 
 
 
-setwd(p_ruta)  #Establezco el Working Directory
-setwd( "./exp/lightGBM" )
-
 columna_clase_bin <- "clase01"
 
-
-
-#--------------------------------------
-#creo las carpetas donde van los resultados
-#creo la carpeta donde va el experimento
-# HT  representa  Hiperparameter Tuning
-# dir.create( "./exp/",  showWarnings = FALSE ) 
-dir.create( paste0("./", kexperimento, "/" ), showWarnings = FALSE )
-setwd( paste0("./", kexperimento, "/" ) )   #Establezco el Working Directory DEL EXPERIMENTO
 
 
 #dejo los datos en el formato que necesita LightGBM
@@ -77,6 +65,14 @@ modelo  <- lgb.train( data= dtrain,
                                    seed=               ksemilla_azar
                                   )
                     )
+file_log(reg="Mejores Parámetros de la Bayesiana:")
+file_log(reg=paste0('max_bin= ', kmax_bin))
+file_log(reg=paste0('learning_rate= ', klearning_rate))
+file_log(reg=paste0('num_iterations= ', knum_iterations))
+file_log(reg=paste0('num_leaves= ', knum_leaves))
+file_log(reg=paste0('min_data_in_leaf= ', kmin_data_in_leaf))
+file_log(reg=paste0('feature_fraction= ', kfeature_fraction))
+
 
 #--------------------------------------
 #ahora imprimo la importancia de variables
@@ -88,7 +84,6 @@ fwrite( tb_importancia,
         sep= "\t" )
 
 #--------------------------------------
-
 
 
 

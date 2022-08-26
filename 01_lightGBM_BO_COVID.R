@@ -1,4 +1,9 @@
-
+# Librerías para la Bayesiana
+require("data.table")
+require("rlist")
+require("lightgbm")
+require("DiceKriging")
+require("mlrMBO")
 
 
 #Aqui se cargan los hiperparametros
@@ -34,6 +39,8 @@ loguear  <- function( reg, arch=NA, folder="./exp/", ext=".txt", verbose=TRUE )
   
   if( verbose )  cat( linea )   #imprimo por pantalla
 }
+
+
 
 #------------------------------------------------------------------------------
 #esta funcion solo puede recibir los parametros que se estan optimizando
@@ -94,23 +101,16 @@ EstimarParametro_lightgbm  <- function( x )
 
 
 #------------------------------------------------------------------------------
-setwd(p_carpeta_base)
+file_log(reg="Comienzo de BAYESIANA.")
+
 # Aqui el metodo corresponde a un archivo rds. Cambiar por el metodo adecuado para su tipo de archivo
-dsLearn <- readRDS(p_archivo_dataset)
+dsLearn <- readRDS(paste0(p_ruta,p_carpeta_base,p_archivo_dataset))
 dsLearn <- as.data.table(dsLearn)
 
-#paso la clase a binaria que tome valores {0,1}  enteros
-dsLearn[ , clase01 := ifelse( resultado=="muerte", 1L, 0L) ]
 
 # Hacemos el FE
 dsLearn = FE(dsLearn)
 
-#creo la carpeta donde va el experimento
-# HT  representa  Hiperparameter Tuning
-setwd(p_ruta)
-dir.create( "./exp/",  showWarnings = FALSE ) 
-dir.create( "./exp/lightGBM/", showWarnings = FALSE )
-setwd("./exp/lightGBM/")   #Establezco el Working Directory DEL EXPERIMENTO
 
 #en estos archivos quedan los resultados
 kbayesiana  <- paste0(p_etiqueta_archivos_salida,".RDATA")
@@ -128,6 +128,8 @@ if( file.exists(klog) )
 
 #los campos que se van a utilizar
 campos_buenos  <- setdiff( colnames(dsLearn), c(columna_clase,"clase01") )
+file_log(reg="Campos buenos:")
+file_log(reg=campos_buenos)
 
 #dejo los datos en el formato que necesita LightGBM
 dtrain  <- lgb.Dataset( data= data.matrix(  dsLearn[ , campos_buenos, with=FALSE]),
@@ -153,6 +155,8 @@ ctrl  <- makeMBOControl( save.on.disk.at.time= 600,  save.file.path= kbayesiana)
 ctrl  <- setMBOControlTermination(ctrl, iters= kBO_iter )   #cantidad de iteraciones
 ctrl  <- setMBOControlInfill(ctrl, crit= makeMBOInfillCritEI() )
 
+file_log(reg="Hiperparámetros de la Bayesiana")
+file_log(reg=toString(hs$pars))
 
 #establezco la funcion que busca el maximo
 surr.km  <- makeLearner("regr.km", predict.type= "se", covtype= "matern3_2", control= list(trace= TRUE))
@@ -165,4 +169,4 @@ if( !file.exists( kbayesiana ) ) {
   run  <- mboContinue( kbayesiana )   #retomo en caso que ya exista
 }
 
-
+file_log(reg="Fin de la Bayesiana.")

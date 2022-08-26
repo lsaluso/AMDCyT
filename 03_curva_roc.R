@@ -1,5 +1,9 @@
+# Librerias para curvas ROC
+library(tidyverse)
+library(pROC)
 
-setwd(paste0(p_ruta,'exp/lightGBM/',kprefijo,'/'))
+
+file_log(reg="Comenzamos ROC.")
 
 tb_entrega %>% 
   arrange(desc(pred)) %>% 
