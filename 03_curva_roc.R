@@ -57,4 +57,6 @@ prediccionFinal = tb_entrega_final20[,c('codigo_paciente','clasif')]
 write.table(prediccionFinal, 'prediccion_final_20.csv', sep = "\t", 
             row.names = FALSE)
 
+sumPositivos = sum(prediccionFinal[,c('clasif')])
 
+file_log(reg=paste0("Totales 1s en Predicción Final:", sumPositivos))
