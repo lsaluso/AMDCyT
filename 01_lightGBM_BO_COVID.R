@@ -8,10 +8,10 @@ require("mlrMBO")
 
 #Aqui se cargan los hiperparametros
 hs <- makeParamSet( 
-  makeNumericParam("learning_rate",    lower=  0.01 , upper=    0.3),
-  makeNumericParam("feature_fraction", lower=  0.2  , upper=    1.0),
-  makeIntegerParam("min_data_in_leaf", lower=  0    , upper= 4000),
-  makeIntegerParam("num_leaves",       lower= 10L   , upper= 1024L)
+  makeNumericParam("learning_rate",    lower=  plearning_rate_lower , upper= plearning_rate_upper),
+  makeNumericParam("feature_fraction", lower=  pfeature_fraction_lower, upper= pfeature_fraction_upper),
+  makeIntegerParam("min_data_in_leaf", lower=  pmin_data_in_leaf_lower, upper= pmin_data_in_leaf_upper),
+  makeIntegerParam("num_leaves",       lower=  pnum_leaves_lower, upper= pnum_leaves_upper)
 )
 
 

@@ -22,6 +22,8 @@ p_experimento = "00"
 p_carpeta_base <- "datasets/"
 # nombre del archivo a importar como dataset
 p_archivo_dataset <- "covid_utn2022.rds"
+# nombre del archivo con el 20% final a predecir
+p_archivo_dataset_final20 <- "covid_utn2022_unknown.rds"
 # nombre de la columna que usare como clase
 columna_clase <- "resultado"
 # prefijo para nombrar los archivos de salida (el .RDATA y el .txt)
@@ -35,11 +37,20 @@ p_parametro_optimizar <- "auc" # cambiar por lo que estemos estimando. Si es un 
 p_minimize <- FALSE # Si se quiere maximizar un parámetro cambiar por FALSE, por ejemplo en un problema de clasificacion
 ksemilla_azar  <- 455531  #Aqui poner la propia semilla
 
-kBO_iter  <- 1   #cantidad de iteraciones de la Optimizacion Bayesiana
+kBO_iter  <- 2   #cantidad de iteraciones de la Optimizacion Bayesiana
 
 # Prefijo para la carpeta de predicciones
 kprefijo       <- paste0("KA", p_experimento)
 
+# Hiperparametros de la bayesiana
+plearning_rate_lower = 0.01
+plearning_rate_upper =  0.3
+pfeature_fraction_lower = 0.2
+pfeature_fraction_upper = 1.0
+pmin_data_in_leaf_lower  = 0
+pmin_data_in_leaf_upper  = 4000
+pnum_leaves_lower = 10L
+pnum_leaves_upper = 1024L
 
 
 #------------------------------------------------------------------------------
@@ -71,7 +82,11 @@ FE  <- function( ds )
   #ds[ , diasenfermo :=as.numeric(difftime("2022-1-21", fdiag_covid, units = "days")) ]
   
   #paso la clase a binaria que tome valores {0,1}  enteros
-  dsLearn[ , clase01 := ifelse( resultado=="muerte", 1L, 0L) ]
+  
+  if("resultado" %in% colnames(ds))
+  {
+    ds[ , clase01 := ifelse( resultado=="muerte", 1L, 0L) ]
+  }
   
   # Agregamos campo dias entre test y síntomas
   ds[ , diastestsintoma :=as.numeric(difftime(fdiag_covid, fini_sintomas, units = "days")) ]

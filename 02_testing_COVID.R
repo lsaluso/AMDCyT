@@ -16,6 +16,7 @@ knum_iterations    <-   BO[1,"num_iterations"]
 knum_leaves        <-   BO[1,"num_leaves"]
 kmin_data_in_leaf  <-   BO[1, "min_data_in_leaf"]
 kfeature_fraction  <-   BO[1, "feature_fraction"]
+nro_iteracion      <-   BO[1, "iteracion"]
 
 rm(list=c('BO'))
 
@@ -72,7 +73,7 @@ file_log(reg=paste0('num_iterations= ', knum_iterations))
 file_log(reg=paste0('num_leaves= ', knum_leaves))
 file_log(reg=paste0('min_data_in_leaf= ', kmin_data_in_leaf))
 file_log(reg=paste0('feature_fraction= ', kfeature_fraction))
-
+file_log(reg=paste0('iteracion= ', nro_iteracion))
 
 #--------------------------------------
 #ahora imprimo la importancia de variables
@@ -104,4 +105,24 @@ fwrite( tb_entrega,
 #ordeno por probabilidad descendente
 setorder( tb_entrega, pred )
 
-  
+
+
+###########################################
+### Aplicamos el modelo al 20% del dataset
+dsFinal20 <- readRDS(paste0(p_ruta,p_carpeta_base,p_archivo_dataset_final20))
+dsFinal20 <- as.data.table(dsFinal20)
+
+# Hacemos el FE
+dsFinal20 = FE(dsFinal20)
+
+prediccion_final20  <- predict( modelo, 
+                        data.matrix( dsFinal20)
+                        ,type="prob")
+
+#genero la tabla de entrega
+tb_entrega_final20  <-  dsFinal20[ , list( codigo_paciente ) ]
+tb_entrega_final20[  , pred := prediccion_final20 ]
+
+#ordeno por probabilidad descendente
+setorder( tb_entrega_final20, pred )
+
