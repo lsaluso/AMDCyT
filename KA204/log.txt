@@ -1,0 +1,23 @@
+20220907 202630	Comienzo de BAYESIANA.
+20220907 202631	Campos buenos:
+20220907 202631	codigo_paciente	sexo	embarazo	edad	peso	altura	imc	fdiag_covid	metodo_diag	metodo_otro	igg	igm	ig_total	fini_sintomas	finternacion	neumonia	no_neumonia_cual	severidad_ins	frecuencia_respiratoria	frecuencia_cardiaca	temperatura	saturacion	sat_aire_ambiente	ldh	progr_image_rad	progr_imagerad_perc	oxigeno_supl	vni	uti	arm	inotropicos	hipertension	diabetes	obesidad	cancer	enf_pulmonr	enf_hepatica	enf_renal	enf_coronaria	enf_otras	corticoides	heparina	plasma_conv	antic_monoclonales	antibioticos	otra_medicacion	diastestsintoma	diastestinternacion	diassintomainternacion
+20220907 202631	Hiperparámetros de la Bayesiana
+20220907 202631	list(id = "learning_rate"	type = "numeric"	len = 1	lower = 0.01	upper = 0.3	values = NULL	cnames = NULL	allow.inf = FALSE	has.default = FALSE	default = NULL	trafo = NULL	requires = NULL	tunable = TRUE	special.vals = list())	list(id = "feature_fraction"	type = "numeric"	len = 1	lower = 0.2	upper = 1	values = NULL	cnames = NULL	allow.inf = FALSE	has.default = FALSE	default = NULL	trafo = NULL	requires = NULL	tunable = TRUE	special.vals = list())	list(id = "min_data_in_leaf"	type = "integer"	len = 1	lower = 0	upper = 4000	values = NULL	cnames = NULL	allow.inf = FALSE	has.default = FALSE	default = NULL	trafo = NULL	requires = NULL	tunable = TRUE	special.vals = list())	list(id = "num_leaves"	type = "integer"	len = 1	lower = 10	upper = 1024	values = NULL	cnames = NULL	allow.inf = FALSE	has.default = FALSE	default = NULL	trafo = NULL	requires = NULL	tunable = TRUE	special.vals = list())
+20220907 214342	Fin de la Bayesiana.
+20220907 214346	Comenzamos el TESTING.
+20220907 214346	Comienzo de Testing.
+20220907 214354	Mejores Parámetros de la Bayesiana:
+20220907 214354	max_bin= 31
+20220907 214354	learning_rate= 0.0103039027577848
+20220907 214354	num_iterations= 1477
+20220907 214354	num_leaves= 12
+20220907 214354	min_data_in_leaf= 102
+20220907 214354	feature_fraction= 0.308080321900641
+20220907 214354	iteracion= 71
+20220907 214920	Comenzamos ROC.
+20220907 214924	True Positive:263
+20220907 214924	False Positive:509
+20220907 214924	False Negativos:29
+20220907 214924	Positivos totales:772
+20220907 214924	Totales 1s en Predicción Final:967
+20220907 214924	Fin del Script!
